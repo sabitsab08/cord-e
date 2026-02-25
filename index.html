@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Robotics Kit · refined secondary search</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=League+Spartan:wght@600;700;800&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ================= RESET ================= */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+/* ================= COLORS ================= */
+:root{
+    --primary:#FFF3AD;
+    --accent:#FFEB7B;
+    --light:#FFF9D6;
+    --search-bg:#ffffff;
+    --search-border:#e2e8f0;
+    --search-focus:#FFEB7B;
+}
+
+body{
+    background:#FFF9D6;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* ================= NAVBAR (main) ================= */
+.navbar{
+    position:fixed;
+    top:8px;
+    left:4.6%;
+    right:4.6%;
+    height:70px;
+    padding:0 30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    background:rgba(255,255,255,0.4);
+    backdrop-filter:blur(10px);
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.25);
+    transition:0.4s;
+    z-index:1000;
+}
+
+.navbar.scrolled{
+    backdrop-filter:blur(18px);
+    background:var(--light);
+}
+
+/* Logo */
+.logo img{
+    height:60px;
+}
+
+/* Nav Links */
+.nav-links{
+    list-style:none;
+    display:flex;
+    gap:30px;
+}
+
+.nav-links a{
+    text-decoration:none;
+    color:#111;
+    font-weight:500;
+    transition:0.3s;
+}
+
+.nav-links a:hover{
+    color:var(--accent);
+}
+
+/* Icons */
+.nav-icons{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+
+.nav-icons a{
+    color:#111;
+    font-size:18px;
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.nav-icons a:hover{
+    color:var(--accent);
+    transform:translateY(-2px);
+}
+
+/* ================= HAMBURGER (original animated X restored) ================= */
+.hamburger{
+    display:none;
+    flex-direction:column;
+    gap:6px;
+    cursor:pointer;
+}
+
+.hamburger span{
+    width:26px;
+    height:3px;
+    background:#111;
+    border-radius:4px;
+    transition:0.4s;
+}
+
+.hamburger.active span:nth-child(1){
+    transform:rotate(45deg) translate(5px,5px);
+}
+.hamburger.active span:nth-child(2){
+    opacity:0;
+}
+.hamburger.active span:nth-child(3){
+    transform:rotate(-45deg) translate(6px,-6px);
+}
+
+/* ================= SECONDARY SEARCH BAR (improved rectangular design) ================= */
+.secondary-search-wrapper {
+    position: fixed;
+    top: calc(70px + 16px);   /* right below main navbar + small gap */
+    left: 4.6%;
+    right: 4.6%;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.secondary-search-container {
+    background: var(--search-bg);
+    border-radius: 12px;        /* rectangular with subtle rounding - less than before */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    width: 100%;
+    max-width: 700px;
+    padding: 0 12px 0 24px;
+    display: flex;
+    align-items: center;
+    height: 60px;               /* slightly taller for better proportion */
+    backdrop-filter: blur(4px);
+    background: rgba(255, 255, 255, 0.98);
+    transition: all 0.25s ease;
+    pointer-events: auto;
+    border: 1px solid var(--search-border);
+}
+
+.secondary-search-container:focus-within {
+    border-color: var(--search-focus);
+    box-shadow: 0 6px 24px rgba(255, 235, 123, 0.25), 0 0 0 3px rgba(255, 235, 123, 0.15);
+}
+
+.secondary-search-container.hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+    pointer-events: none;
+}
+
+/* search input - updated placeholder */
+.secondary-search-container input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1.05rem;
+    padding: 14px 0;
+    color: #1a202c;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+}
+
+.secondary-search-container input::placeholder {
+    color: #94a3b8;
+    font-weight: 400;
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* icons inside secondary bar */
+.search-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-left: 12px;
+}
+
+.search-actions i {
+    font-size: 1.3rem;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.search-actions i:hover {
+    color: #1e293b;
+    background: rgba(255, 235, 123, 0.25);
+    transform: scale(1.02);
+}
+
+.search-actions .fa-xmark {
+    font-size: 1.8rem;
+    color: #64748b;
+}
+
+.search-actions .fa-xmark:hover {
+    color: #dc2626;
+    background: rgba(220, 38, 38, 0.08);
+}
+
+/* ================= HERO (unchanged) ================= */
+.hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding:0 4.6%;
+}
+
+.hero video{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    top:0;
+    left:0;
+    z-index:-2;
+}
+
+.hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.45);
+    z-index:-1;
+}
+
+.hero-content{
+    max-width:750px;
+}
+
+.typewriter{
+    font-family:'League Spartan', sans-serif;
+    font-size:48px;
+    font-weight:800;
+    margin-bottom:24px;
+}
+
+.cursor{
+    color:var(--accent);
+    animation:blink 0.8s infinite;
+}
+
+@keyframes blink{
+    50%{opacity:0;}
+}
+
+.hero p{
+    font-family:'Montserrat', sans-serif;
+    font-size:18px;
+    line-height:1.7;
+    color:#c7d2ff;
+    margin-bottom:40px;
+}
+
+.hero-buttons{
+    display:flex;
+    gap:20px;
+}
+
+.btn-primary{
+    padding:14px 34px;
+    border-radius:8px;
+    background:var(--primary);
+    color:#050f1d;
+    font-weight:600;
+    text-decoration:none;
+    transition:0.3s;
+}
+
+.btn-primary:hover{
+    background:var(--accent);
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(255,235,123,0.4);
+}
+
+.btn-secondary{
+    padding:14px 34px;
+    border-radius:8px;
+    border:1.5px solid var(--primary);
+    color:white;
+    text-decoration:none;
+}
+
+/* ================= MOBILE (original restored with hamburger display) ================= */
+@media(max-width:768px){
+
+    .nav-links{
+        position:absolute;
+        top:80px;
+        left:0;
+        right:0;
+        background:rgba(255,255,255,0.95);
+        flex-direction:column;
+        align-items:center;
+        gap:25px;
+        padding:30px 0;
+        border-radius:14px;
+        transform:translateY(-150%);
+        transition:0.4s;
+    }
+
+    .nav-links.active{
+        transform:translateY(0);
+    }
+
+    .hamburger{
+        display:flex;   /* hamburger becomes visible on mobile */
+    }
+
+    .typewriter{
+        font-size:32px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+    .hero{
+        height: 500px;
+    }
+    .hero video{
+        height: 650px;
+    }
+
+    /* secondary search on mobile - rectangular shape preserved */
+    .secondary-search-container {
+        max-width: 95%;
+        padding: 0 12px 0 20px;
+        height: 56px;
+    }
+
+    .secondary-search-container input {
+        font-size: 1rem;
+        padding: 12px 0;
+    }
+
+    .search-actions i {
+        font-size: 1.2rem;
+    }
+    .search-actions .fa-xmark {
+        font-size: 1.6rem;
+    }
+}
+
+@media(max-width:480px){
+    .secondary-search-container {
+        height: 52px;
+        padding: 0 8px 0 16px;
+    }
+    .secondary-search-container input {
+        font-size: 0.95rem;
+    }
+    .search-actions {
+        gap: 8px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR (intact, hamburger with spans, search trigger ID) -->
+<nav class="navbar" id="navbar">
+
+    <div class="logo">
+        <img src="logo.png" alt="Logo">
+    </div>
+
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Shop</a></li>
+        <li><a href="#">Categories</a></li>
+        <li><a href="#">Contact</a></li>
+    </ul>
+
+    <div style="display:flex; align-items:center; gap:20px;">
+
+        <div class="nav-icons">
+            <!-- search icon trigger with id -->
+            <a href="#" id="searchIconTrigger"><i class="fa-solid fa-magnifying-glass"></i></a>
+            <a href="#"><i class="fa-regular fa-heart"></i></a>
+            <a href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a href="#"><i class="fa-regular fa-user"></i></a>
+        </div>
+
+        <!-- hamburger with three spans (original structure) -->
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- SECONDARY SEARCH BAR (rectangular, placeholder "Search Product") -->
+<div class="secondary-search-wrapper" id="secondarySearchWrapper">
+    <div class="secondary-search-container hidden" id="secondarySearchContainer">
+        <input type="text" placeholder="Search Product" id="searchInputField">
+        <div class="search-actions">
+            <i class="fa-solid fa-magnifying-glass" id="secondarySearchIcon"></i>
+            <i class="fa-solid fa-xmark" id="closeSearchIcon"></i>
+        </div>
+    </div>
+</div>
+
+<!-- HERO (exactly as before) -->
+<section class="hero">
+
+    <video autoplay muted loop playsinline>
+        <source src="hero.mp4" type="video/mp4">
+    </video>
+
+    <div class="hero-content">
+        <h1 class="typewriter">
+            <span id="typed-text"></span>
+            <span class="cursor">|</span>
+        </h1>
+
+        <p>
+            Premium robotics kits designed for students, hobbyists, and future engineers.
+            Learn electronics, coding, and AI in a fun way.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="#" class="btn-primary">Shop Now</a>
+            <a href="#" class="btn-secondary">Watch Demo</a>
+        </div>
+    </div>
+
+</section>
+
+<script>
+/* ========== TYPEWRITER (original) ========== */
+const text = "Build, Code & Control Your Own Robot";
+let index = 0;
+
+function typeWriter(){
+    if(index < text.length){
+        document.getElementById("typed-text").innerHTML += text.charAt(index);
+        index++;
+        setTimeout(typeWriter, 100);
+    }
+}
+window.onload = typeWriter;
+
+/* ========== SCROLL BLUR (original) ========== */
+window.addEventListener("scroll", function(){
+    const navbar = document.getElementById("navbar");
+    if(window.scrollY > 50){
+        navbar.classList.add("scrolled");
+    }else{
+        navbar.classList.remove("scrolled");
+    }
+});
+
+/* ========== HAMBURGER (fully restored X animation) ========== */
+const hamburger = document.getElementById("hamburger");
+const navLinks = document.getElementById("navLinks");
+
+hamburger.addEventListener("click", () => {
+    hamburger.classList.toggle("active");
+    navLinks.classList.toggle("active");
+});
+
+/* ========== SECONDARY SEARCH (refined) ========== */
+const searchTrigger = document.getElementById('searchIconTrigger');
+const secondaryContainer = document.getElementById('secondarySearchContainer');
+const closeIcon = document.getElementById('closeSearchIcon');
+const secondarySearchIcon = document.getElementById('secondarySearchIcon');
+const searchInput = document.getElementById('searchInputField');
+
+// show search bar
+function showSearchBar() {
+    secondaryContainer.classList.remove('hidden');
+    setTimeout(() => searchInput.focus(), 150);
+}
+
+// hide search bar and clear input
+function hideSearchBar() {
+    secondaryContainer.classList.add('hidden');
+    searchInput.value = '';
+}
+
+// 1) main search icon click
+searchTrigger.addEventListener('click', function(e) {
+    e.preventDefault();
+    showSearchBar();
+});
+
+// 2) cross icon inside secondary bar
+closeIcon.addEventListener('click', function(e) {
+    e.preventDefault();
+    hideSearchBar();
+});
+
+// 3) search icon inside secondary bar (demo action)
+secondarySearchIcon.addEventListener('click', function(e) {
+    e.preventDefault();
+    const query = searchInput.value.trim();
+    if (query === '') {
+        alert('🔍 Please enter a product to search.');
+        return;
+    }
+    alert(`Searching for "${query}" … (demo action)`);
+});
+
+// 4) Enter key in input triggers search
+searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        secondarySearchIcon.click();
+    }
+});
+
+// 5) ESC key hides search bar
+searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        hideSearchBar();
+        e.preventDefault();
+    }
+});
+
+// everything intact
+</script>
+
+</body>
+</html>
