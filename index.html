@@ -31,7 +31,7 @@
 }
 
 body{
-    background:#FFF9D6;
+    background:var(--search-bg);
     color:white;
     overflow-x:hidden;
 }
@@ -57,13 +57,18 @@ body{
 }
 
 .navbar.scrolled{
-    backdrop-filter:blur(18px);
-    background:var(--light);
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.4);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 
 /* Logo */
 .logo img{
     height:60px;
+    width: auto;
+    display: block;
 }
 
 /* Nav Links */
@@ -223,19 +228,20 @@ body{
     background: rgba(220, 38, 38, 0.08);
 }
 
-/* ================= HERO (unchanged) ================= */
+/* ================= HERO (FIXED CONTENT POSITION) ================= */
 .hero{
     position:relative;
-    min-height:100vh;
+    height: 570px;
     display:flex;
-    align-items:center;
+    align-items:center;        /* this centers content vertically */
     padding:0 4.6%;
+    margin-top: 0;             /* no extra margin pushing down */
 }
 
 .hero video{
     position:absolute;
     width:100%;
-    height:100%;
+    height:570px;
     object-fit:cover;
     top:0;
     left:0;
@@ -252,6 +258,10 @@ body{
 
 .hero-content{
     max-width:750px;
+    margin-top: 0;            /* ← removed large top margin */
+    transform: translateY(0);  /* ensure no shifting */
+    position: relative;
+    top: 0;                   /* explicit zero */
 }
 
 .typewriter{
@@ -306,16 +316,211 @@ body{
     color:white;
     text-decoration:none;
 }
+.service-section{
+  width:100%;
+  height: auto;
+  min-height: 120px;
+  background:#fff;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.service-wrapper{
+  width:70%; /* 15% left + 15% right gap */
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.service-item{
+  width:30%;
+  color: #dc2626;
+}
+
+.service-content{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.service-content i{
+  font-size:40px;
+  color:#011969;
+}
+
+.service-content h3{
+  font-size:20px;
+  margin:0;
+  color: #011969;
+  font-weight:600;
+}
+
+.service-content p{
+  margin:6px 0 0 0;
+  font-size:14px;
+  color:#555;
+}
+
+.separator{
+  width:1px;
+  height:80px;
+  background:#011969;
+}
+.featured-section{
+  width:100%;
+  padding:80px 0;
+  background:#f4f4f4;
+}
+
+.featured-heading{
+  width:70%;
+  margin:0 auto 50px auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+}
+
+.featured-heading h2{
+  font-size:28px;
+  font-weight:700;
+  letter-spacing:2px;
+  margin:0;
+  color: #011969;
+  white-space:nowrap;
+}
+
+.featured-heading .line{
+  flex:1;
+  height:2px;
+  background:#937474;
+}
+
+/* Featured Content Grid */
+.featured-content {
+  width: 70%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  transition: 0.3s;
+  text-align: center;
+  padding: 25px 15px 20px;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.product-card i {
+  font-size: 48px;
+  color: #011969;
+  margin-bottom: 15px;
+}
+
+.product-card h3 {
+  font-size: 20px;
+  color: #011969;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.product-card p {
+  color: #4b5563;
+  font-size: 14px;
+  margin-bottom: 15px;
+  line-height: 1.5;
+  padding: 0 5px;
+}
+
+.product-card .price {
+  font-weight: 700;
+  font-size: 20px;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.product-card .btn-small {
+  display: inline-block;
+  background: var(--primary);
+  color: #011969;
+  text-decoration: none;
+  padding: 8px 25px;
+  border-radius: 30px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.product-card .btn-small:hover {
+  background: var(--accent);
+  transform: scale(1.05);
+}
+
+/* Mobile Responsive for Featured grid */
+@media (max-width: 768px){
+  .featured-content {
+    width: 90%;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+/* ========== MOBILE RESPONSIVE FIXES ========== */
+
+/* service section mobile */
+@media (max-width: 768px){
+
+  .service-wrapper{
+    width:90%;
+    flex-direction:column;
+  }
+
+  .service-item{
+    width:100%;
+    text-align:center;
+  }
+
+  .service-content{
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .service-content i{
+    font-size:36px;
+    margin-bottom:10px;
+  }
+
+  .separator{
+    width:100%;
+    height:1px;
+    margin:25px 0;
+  }
+
+}
 
 /* ================= MOBILE (original restored with hamburger display) ================= */
 @media(max-width:768px){
+
+    .navbar {
+        padding: 0 20px;
+    }
 
     .nav-links{
         position:absolute;
         top:80px;
         left:0;
         right:0;
-        background:rgba(255,255,255,0.95);
+        background:rgba(255,255,255,0.98);
+        backdrop-filter: blur(10px);
         flex-direction:column;
         align-items:center;
         gap:25px;
@@ -323,6 +528,8 @@ body{
         border-radius:14px;
         transform:translateY(-150%);
         transition:0.4s;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        z-index: 999;
     }
 
     .nav-links.active{
@@ -345,7 +552,7 @@ body{
         height: 500px;
     }
     .hero video{
-        height: 650px;
+        height: 500px;        /* match hero height */
     }
 
     /* secondary search on mobile - rectangular shape preserved */
@@ -366,6 +573,31 @@ body{
     .search-actions .fa-xmark {
         font-size: 1.6rem;
     }
+
+    /* featured heading mobile */
+    .featured-heading {
+        width: 90%;
+        gap: 10px;
+    }
+
+    .featured-heading h2 {
+        font-size: 22px;
+    }
+
+    /* service section spacing */
+    .service-section {
+        padding: 30px 0;
+    }
+
+    /* logo size adjust if needed */
+    .logo img {
+        height: 50px;
+    }
+
+    /* ensure hero content stays centered vertically on mobile */
+    .hero-content {
+        margin-top: 0;
+    }
 }
 
 @media(max-width:480px){
@@ -379,6 +611,9 @@ body{
     .search-actions {
         gap: 8px;
     }
+    .typewriter {
+        font-size: 28px;
+    }
 }
 </style>
 </head>
@@ -388,7 +623,8 @@ body{
 <nav class="navbar" id="navbar">
 
     <div class="logo">
-        <img src="logo.png" alt="Logo">
+        <!-- original logo.png restored (using fallback image if missing) -->
+        <img src="logo.png" alt="Robotics Kit Logo" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'150\' height=\'50\' viewBox=\'0 0 150 30\'%3E%3Crect width=\'150\' height=\'30\' fill=\'%23011969\' /%3E%3Ctext x=\'15\' y=\'22\' font-family=\'Poppins\' font-weight=\'700\' fill=\'%23FFEB7B\' font-size=\'18\'%3EROBOTIC KIT%3C/text%3E%3C/svg%3E';">
     </div>
 
     <ul class="nav-links" id="navLinks">
@@ -430,11 +666,12 @@ body{
     </div>
 </div>
 
-<!-- HERO (exactly as before) -->
+<!-- HERO - content now properly centered, no shifting -->
 <section class="hero">
 
     <video autoplay muted loop playsinline>
         <source src="hero.mp4" type="video/mp4">
+        <!-- if video missing, background will be dark due to overlay -->
     </video>
 
     <div class="hero-content">
@@ -453,7 +690,90 @@ body{
             <a href="#" class="btn-secondary">Watch Demo</a>
         </div>
     </div>
+</section>
 
+<!-- SERVICE SECTION -->
+<section class="service-section">
+  <div class="service-wrapper">
+    <div class="service-item">
+      <div class="service-content">
+        <i class="fa-solid fa-truck-fast"></i>
+        <div class="text">
+          <h3>Fast Shipping</h3>
+          <p>Get your products delivered quickly and safely to your doorstep.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="service-item">
+      <div class="service-content">
+        <i class="fa-solid fa-hand-holding-dollar"></i>
+        <div class="text">
+          <h3>Money Back Guarantee</h3>
+          <p>100% refund policy if you are not satisfied with your purchase.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="service-item">
+      <div class="service-content">
+        <i class="fa-solid fa-headset"></i>
+        <div class="text">
+          <h3>Online Support</h3>
+          <p>24/7 dedicated customer support to assist you anytime.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURED SECTION with product cards -->
+<section class="featured-section">
+  <div class="featured-heading">
+    <span class="line"></span>
+    <h2>FEATURED ROBOTS</h2>
+    <span class="line"></span>
+  </div>
+
+  <div class="featured-content">
+    <!-- product card 1 -->
+    <div class="product-card">
+      <i class="fa-solid fa-robot"></i>
+      <h3>Explorer Bot</h3>
+      <p>Programmable rover with sensors, camera & AI module. Perfect for beginners.</p>
+      <div class="price">$129</div>
+      <a href="#" class="btn-small">Add to cart</a>
+    </div>
+    <!-- product card 2 -->
+    <div class="product-card">
+      <i class="fa-solid fa-microchip"></i>
+      <h3>Arm Builder Kit</h3>
+      <p>6-axis robotic arm, servo motors, Arduino compatible. Learn control systems.</p>
+      <div class="price">$249</div>
+      <a href="#" class="btn-small">Add to cart</a>
+    </div>
+    <!-- product card 3 -->
+    <div class="product-card">
+      <i class="fa-solid fa-car"></i>
+      <h3>Line Follower</h3>
+      <p>Autonomous car kit with IR sensors, speed control & raspberry pi Pico.</p>
+      <div class="price">$89</div>
+      <a href="#" class="btn-small">Add to cart</a>
+    </div>
+    <!-- product card 4 -->
+    <div class="product-card">
+      <i class="fa-solid fa-brain"></i>
+      <h3>AI Vision Kit</h3>
+      <p>Object detection, face tracking, and voice control. Includes camera module.</p>
+      <div class="price">$199</div>
+      <a href="#" class="btn-small">Add to cart</a>
+    </div>
+  </div>
 </section>
 
 <script>
@@ -547,7 +867,29 @@ searchInput.addEventListener('keydown', function(e) {
     }
 });
 
-// everything intact
+// Optional: close search if click outside (good UX)
+document.addEventListener('click', function(e) {
+    // if search bar is visible and click is outside both the container and the trigger
+    if (!secondaryContainer.classList.contains('hidden')) {
+        const isClickInside = secondaryContainer.contains(e.target) || searchTrigger.contains(e.target);
+        if (!isClickInside) {
+            hideSearchBar();
+        }
+    }
+});
+
+// ensure that the secondary container remains hidden on load
+window.addEventListener('load', function() {
+    secondaryContainer.classList.add('hidden');
+});
+
+// Fix for mobile menu closing after link click (optional)
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('active');
+    });
+});
 </script>
 
 </body>
